@@ -62,3 +62,12 @@ func place(term Tetro, grid [][]string, row, col int) {
 	}
 }
 
+func remove(term Tetro, grid [][]string, row, col int) {
+	for r := range term.shape {
+		for c := range term.shape[r] {
+			if term.shape[r][c] == 1 {
+				grid[row+r][col+c] = "*"
+			}
+		}
+	}
+}
