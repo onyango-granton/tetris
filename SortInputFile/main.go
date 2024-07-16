@@ -17,3 +17,11 @@ func byteToInt(b byte) (int, error) {
 	}
 }
 
+func isValidTetro(tetro [][]int) bool {
+	for row := range tetro{
+		for col := range tetro[row]{
+			if tetro[row][col] == 1 && tetro
+		}
+	}
+}
+
