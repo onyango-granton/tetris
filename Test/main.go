@@ -27,3 +27,12 @@ var (
 	grid       = make([][]string, int(math.Ceil(gridSize)))
 )
 
+// initializes a square grid 2D
+func initGrid() {
+	for i := 0; i < int(math.Ceil(gridSize)); i++ {
+		grid[i] = make([]string, int(math.Ceil(gridSize)))
+		for j := 0; j < int(math.Ceil(gridSize)); j++ {
+			grid[i][j] = "*"
+		}
+	}
+}
