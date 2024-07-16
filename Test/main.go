@@ -71,3 +71,23 @@ func remove(term Tetro, grid [][]string, row, col int) {
 		}
 	}
 }
+
+// fuction that uses recursive backtracking to place tetro in grig
+func completeGrid(tetro_group []Tetro, grid [][]string, index int) bool {
+	if index == len(tetro_group) {
+		return true
+	}
+	for row := range grid {
+		for col := range grid[row] {
+			if canPlace(tetro_group[index], grid, row, col) {
+				place(tetro_group[index], grid, row, col)
+				if completeGrid(tetro_group, grid, index+1) {
+					return true
+				}
+				remove(tetro_group[index], grid, row, col)
+			}
+		}
+	}
+	return false
+}
+
