@@ -25,3 +25,17 @@ func isValidTetro(tetro [][]int) bool {
 	}
 }
 
+func stringToIntSlice(s string) ([]int,error){
+	res := []int{}
+	if len(s) != 4{
+		return nil, errors.New("invalid length entry in file")
+	}
+	for _,b := range s{
+		num, err := byteToInt(byte(b))
+		if err != nil{
+			return nil, err
+		}
+		res = append(res, num)
+	}
+	return res, nil
+}
