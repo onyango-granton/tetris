@@ -91,3 +91,22 @@ func completeGrid(tetro_group []Tetro, grid [][]string, index int) bool {
 	return false
 }
 
+func printGrid() {
+	for row := range grid {
+		for col := range grid[row] {
+			fmt.Print(grid[row][col] + " ")
+		}
+		fmt.Println()
+	}
+}
+
+func main() {
+	// initializes a 6 * 6 grid
+	initGrid()
+	// if grid is fitted display grid
+	if completeGrid(tetroGroup, grid, 0) {
+		printGrid()
+	} else {
+		fmt.Println("No solutions found")
+	}
+}
