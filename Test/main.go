@@ -36,3 +36,17 @@ func initGrid() {
 		}
 	}
 }
+
+// checks whether we can place the term at the specific row and col of grid
+func canPlace(term Tetro, grid [][]string, row, col int) bool {
+	for r := range term.shape {
+		for c := range term.shape[r] {
+			if term.shape[r][c] == 1 {
+				if row+r >= len(grid) || col+c >= len(grid[row]) || grid[row+r][col+c] != "*" {
+					return false
+				}
+			}
+		}
+	}
+	return true
+}
