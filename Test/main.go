@@ -20,3 +20,10 @@ var (
 	F = Tetro{[][]int{{0, 0, 0, 0}, {0, 0, 1, 0}, {0, 1, 1, 1}, {0, 0, 0, 0}}, "F"}
 	G = Tetro{[][]int{{0, 0, 0, 0}, {1, 1, 0, 0}, {0, 1, 1, 0}, {0, 0, 0, 0}}, "G"}
 )
+
+var (
+	tetroGroup = []Tetro{A, B, C, D, E, F, G}
+	gridSize   = math.Sqrt(float64(len(tetroGroup) * len(tetroGroup[0].shape)))
+	grid       = make([][]string, int(math.Ceil(gridSize)))
+)
+
