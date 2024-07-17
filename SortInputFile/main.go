@@ -7,6 +7,11 @@ import (
 	"strings"
 )
 
+type Tetromino struct{
+	shape [][]int
+	name string
+}
+
 func byteToInt(b byte) (int, error) {
 	if b == '.' {
 		return 0, nil
