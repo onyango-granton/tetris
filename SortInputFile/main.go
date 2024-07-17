@@ -7,9 +7,9 @@ import (
 	"strings"
 )
 
-type Tetromino struct{
+type Tetromino struct {
 	shape [][]int
-	name string
+	name  string
 }
 
 func byteToInt(b byte) (int, error) {
@@ -30,14 +30,14 @@ func byteToInt(b byte) (int, error) {
 // 	}
 // }
 
-func stringToIntSlice(s string) ([]int,error){
+func stringToIntSlice(s string) ([]int, error) {
 	res := []int{}
-	if len(s) != 4{
+	if len(s) != 4 {
 		return nil, errors.New("invalid length entry in file")
 	}
-	for _,b := range s{
+	for _, b := range s {
 		num, err := byteToInt(byte(b))
-		if err != nil{
+		if err != nil {
 			return nil, err
 		}
 		res = append(res, num)
@@ -45,10 +45,8 @@ func stringToIntSlice(s string) ([]int,error){
 	return res, nil
 }
 
-
-
 func allOne(num1, num2 int) bool {
-	if num1 == 1{
+	if num1 == 1 {
 		return num1 == num2
 	}
 	return false
@@ -56,23 +54,23 @@ func allOne(num1, num2 int) bool {
 
 func isSurroundedByOnes(arr [][]int, row, col int) bool {
 	// Check horizontally
-	if col-1 >= 0 && allOne(arr[row][col-1],arr[row][col]) || col+1 < len(arr[row]) && allOne(arr[row][col+1],arr[row][col]) {
+	if col-1 >= 0 && allOne(arr[row][col-1], arr[row][col]) || col+1 < len(arr[row]) && allOne(arr[row][col+1], arr[row][col]) {
 		return true
 	}
 	// Check vertically
-	if row-1 >= 0 && allOne(arr[row][col],arr[row-1][col]) || row+1 < len(arr) && allOne(arr[row][col],arr[row+1][col]) {
+	if row-1 >= 0 && allOne(arr[row][col], arr[row-1][col]) || row+1 < len(arr) && allOne(arr[row][col], arr[row+1][col]) {
 		return true
 	}
 	return false
 }
 
-func isValidTetro(tetro [][]int) (bool,error) {
+func isValidTetro(tetro [][]int) (bool, error) {
 	var bordercount int
 	var linecount int
 
 	for row := 0; row < len(tetro); row++ {
 		for col := 0; col < len(tetro[row]); col++ {
-			if tetro[row][col] == 1{
+			if tetro[row][col] == 1 {
 				linecount++
 			}
 			if tetro[row][col] == 1 && isSurroundedByOnes(tetro, row, col) {
@@ -81,13 +79,12 @@ func isValidTetro(tetro [][]int) (bool,error) {
 			}
 		}
 	}
-	if bordercount > 4 || linecount > 4{
+	if bordercount > 4 || linecount > 4 {
 		return false, errors.New("Invalid Tetromino")
 	} else {
 		return true, nil
 	}
 }
-
 
 func tetroGroup(textFile string) []Tetromino {
 	tetrominoesGroup := []Tetromino{}
@@ -103,8 +100,8 @@ func tetroGroup(textFile string) []Tetromino {
 			continue
 		}
 		chArr, err := stringToIntSlice(ch)
-		if err!= nil{
-			fmt.Println(err.Error(),"at line",i+1)
+		if err != nil {
+			fmt.Println(err.Error(), "at line", i+1)
 			return nil
 		} else {
 			nums = append(nums, chArr)
@@ -114,19 +111,19 @@ func tetroGroup(textFile string) []Tetromino {
 	startAscii := 'A'
 	tetrominoes := make(map[rune][][]int)
 
-	for i:=0; i<len(nums);{
+	for i := 0; i < len(nums); {
 		characterMino := [][]int{}
-		for j:=i; j<i+4;j++{
+		for j := i; j < i+4; j++ {
 			characterMino = append(characterMino, nums[j])
 		}
 		tetrominoes[startAscii] = characterMino
-		startAscii ++
+		startAscii++
 		i += 4
 	}
 
-	for k,_ := range tetrominoes{
+	for k := range tetrominoes {
 		res, err := isValidTetro(tetrominoes[k])
-		if err != nil{
+		if err != nil {
 			fmt.Println(err.Error())
 			return nil
 		} else if res {
@@ -143,10 +140,6 @@ func tetroGroup(textFile string) []Tetromino {
 	// }
 }
 
-
-
-
-
 func main() {
 	sampleFile, err := os.ReadFile("sample.txt")
 	if err != nil {
@@ -161,8 +154,8 @@ func main() {
 			continue
 		}
 		chArr, err := stringToIntSlice(ch)
-		if err!= nil{
-			fmt.Println(err.Error(),"at line",i+1)
+		if err != nil {
+			fmt.Println(err.Error(), "at line", i+1)
 			return
 		} else {
 			nums = append(nums, chArr)
@@ -187,7 +180,7 @@ func main() {
 	// 	}
 	// 	i += 4
 	// }
-	
+
 	startAscii := 'A'
 	tetrominoes := make(map[rune][][]int)
 	// for _,ch := range nums{
@@ -199,14 +192,13 @@ func main() {
 	// 	startAscii++
 	// }
 
-
-	for i:=0; i<len(nums);{
+	for i := 0; i < len(nums); {
 		characterMino := [][]int{}
-		for j:=i; j<i+4;j++{
+		for j := i; j < i+4; j++ {
 			characterMino = append(characterMino, nums[j])
 		}
 		tetrominoes[startAscii] = characterMino
-		startAscii ++
+		startAscii++
 		i += 4
 	}
 
@@ -218,11 +210,10 @@ func main() {
 	// 	}
 	// }
 
-	for k,_ := range tetrominoes{
+	for k := range tetrominoes {
 		newTetro := Tetromino{shape: tetrominoes[k], name: string(k)}
 		tetrominoesGroup = append(tetrominoesGroup, newTetro)
 	}
-
 
 	// for i := 0; i < len(nums);{
 	// 	for j := i ; j < i+4;j++{
