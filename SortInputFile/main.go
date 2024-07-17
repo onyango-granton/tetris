@@ -66,7 +66,7 @@ func isSurroundedByOnes(arr [][]int, row, col int) bool {
 	return false
 }
 
-func isValidTetro(tetro [][]int) bool {
+func isValidTetro(tetro [][]int) (bool,error) {
 	var bordercount int
 	var linecount int
 
@@ -82,10 +82,65 @@ func isValidTetro(tetro [][]int) bool {
 		}
 	}
 	if bordercount > 4 || linecount > 4{
-		return false
+		return false, errors.New("Invalid Tetromino")
 	} else {
-		return true
+		return true, nil
 	}
+}
+
+
+func tetroGroup(textFile string) []Tetromino {
+	tetrominoesGroup := []Tetromino{}
+	// opens text file
+	sampleFile, err := os.ReadFile(textFile)
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil
+	}
+	var nums [][]int
+	for i, ch := range strings.Split(string(sampleFile), "\n") {
+		if ch == "" {
+			continue
+		}
+		chArr, err := stringToIntSlice(ch)
+		if err!= nil{
+			fmt.Println(err.Error(),"at line",i+1)
+			return nil
+		} else {
+			nums = append(nums, chArr)
+		}
+	}
+
+	startAscii := 'A'
+	tetrominoes := make(map[rune][][]int)
+
+	for i:=0; i<len(nums);{
+		characterMino := [][]int{}
+		for j:=i; j<i+4;j++{
+			characterMino = append(characterMino, nums[j])
+		}
+		tetrominoes[startAscii] = characterMino
+		startAscii ++
+		i += 4
+	}
+
+	for k,_ := range tetrominoes{
+		res, err := isValidTetro(tetrominoes[k])
+		if err != nil{
+			fmt.Println(err.Error())
+			return nil
+		} else if res {
+			newTetro := Tetromino{shape: tetrominoes[k], name: string(k)}
+			tetrominoesGroup = append(tetrominoesGroup, newTetro)
+		}
+	}
+
+	return tetrominoesGroup
+
+	// for k,_ := range tetrominoes{
+	// 	newTetro := Tetromino{shape: tetrominoes[k], name: string(k)}
+	// 	tetrominoesGroup = append(tetrominoesGroup, newTetro)
+	// }
 }
 
 
@@ -155,13 +210,13 @@ func main() {
 		i += 4
 	}
 
-	for k,_ := range tetrominoes{
-		if isValidTetro(tetrominoes[k]){
-			fmt.Println(true)
-		} else {
-			fmt.Println(false)
-		}
-	}
+	// for k,_ := range tetrominoes{
+	// 	if isValidTetro(tetrominoes[k]){
+	// 		fmt.Println(true)
+	// 	} else {
+	// 		fmt.Println(false)
+	// 	}
+	// }
 
 	for k,_ := range tetrominoes{
 		newTetro := Tetromino{shape: tetrominoes[k], name: string(k)}
