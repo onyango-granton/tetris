@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"math"
 	"os"
 	"strings"
 )
@@ -86,13 +87,13 @@ func isValidTetro(tetro [][]int) (bool, error) {
 	}
 }
 
-func tetroGroup(textFile string) []Tetromino {
+func tetroGroup(textFile string) ([]Tetromino,int) {
 	tetrominoesGroup := []Tetromino{}
 	// opens text file
 	sampleFile, err := os.ReadFile(textFile)
 	if err != nil {
 		fmt.Println(err.Error())
-		return nil
+		return nil,0
 	}
 	var nums [][]int
 	for i, ch := range strings.Split(string(sampleFile), "\n") {
@@ -102,7 +103,7 @@ func tetroGroup(textFile string) []Tetromino {
 		chArr, err := stringToIntSlice(ch)
 		if err != nil {
 			fmt.Println(err.Error(), "at line", i+1)
-			return nil
+			return nil,0
 		} else {
 			nums = append(nums, chArr)
 		}
@@ -125,14 +126,16 @@ func tetroGroup(textFile string) []Tetromino {
 		res, err := isValidTetro(tetrominoes[k])
 		if err != nil {
 			fmt.Println(err.Error())
-			return nil
+			return nil,0
 		} else if res {
 			newTetro := Tetromino{shape: tetrominoes[k], name: string(k)}
 			tetrominoesGroup = append(tetrominoesGroup, newTetro)
 		}
 	}
 
-	return tetrominoesGroup
+	gridSize := math.Sqrt(float64(len(tetrominoesGroup) * len(tetrominoesGroup[0].shape)))
+
+	return tetrominoesGroup, int(gridSize)
 
 	// for k,_ := range tetrominoes{
 	// 	newTetro := Tetromino{shape: tetrominoes[k], name: string(k)}
