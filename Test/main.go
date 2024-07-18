@@ -239,6 +239,7 @@ func printGrid() {
 }
 
 func main() {
+	fmt.Println(tetroGroupFunc("sample.txt"))
 	// initializes a 6 * 6 grid
 	initGrid()
 	// if grid is fitted display grid
