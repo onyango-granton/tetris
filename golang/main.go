@@ -10,15 +10,28 @@ type Tetromino struct {
 }
 
 // Define the 7 tetrominoes with their fixed shapes
-var I = Tetromino{[][]int{{1, 1, 1, 1}}, "I"}
-var J = Tetromino{[][]int{{1, 0, 0}, {1, 1, 1}}, "J"}
-var L = Tetromino{[][]int{{0, 0, 1}, {1, 1, 1}}, "L"}
-var O = Tetromino{[][]int{{1, 1}, {1, 1}}, "O"}
-var S = Tetromino{[][]int{{0, 1, 1}, {1, 1, 0}}, "S"}
-var T = Tetromino{[][]int{{0, 1, 0}, {1, 1, 1}}, "T"}
-var Z = Tetromino{[][]int{{1, 1, 0}, {0, 1, 1}}, "Z"}
+// var I = Tetromino{[][]int{{1, 1, 1, 1}}, "I"}
+// var J = Tetromino{[][]int{{1, 0, 0}, {1, 1, 1}}, "J"}
+// var L = Tetromino{[][]int{{0, 0, 1}, {1, 1, 1}}, "L"}
+// var O = Tetromino{[][]int{{1, 1}, {1, 1}}, "O"}
+// var S = Tetromino{[][]int{{0, 1, 1}, {1, 1, 0}}, "S"}
+// var T = Tetromino{[][]int{{0, 1, 0}, {1, 1, 1}}, "T"}
+// var Z = Tetromino{[][]int{{1, 1, 0}, {0, 1, 1}}, "Z"}
 
-var tetrominoes = []Tetromino{I, J, L, O, S, T, Z}
+var A = Tetromino{[][]int{{1}, {1}, {1}, {1}}, "A"}
+var B = Tetromino{[][]int{{1, 1, 1, 1}}, "B"}
+var C = Tetromino{[][]int{{1, 1, 1}, {0, 0, 1}}, "C"}
+var D = Tetromino{[][]int{{0, 1, 1}, {1, 1, 0}}, "D"}
+var E = Tetromino{[][]int{{ 1, 1}, {1, 1}}, "E"}
+var F = Tetromino{[][]int{{1, 1, 0}, {0, 1, 1}}, "F"}
+var G = Tetromino{[][]int{{1, 1}, {0, 1}, {0, 1}}, "G"}
+var H = Tetromino{[][]int{{1, 1, 1}, {0, 1, 0}}, "H"}
+
+
+//var tetrominoes = []Tetromino{I, J, L, O, S, T, Z}
+
+var tetrominoes = []Tetromino{A, B, C, D, E, F, G, H}
+
 var gridSize = 6
 var grid = make([][]string, gridSize)
 
