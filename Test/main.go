@@ -190,7 +190,7 @@ func canPlace(term Tetromino, grid [][]string, row, col int) bool {
 }
 
 // Places the term in row and col of the grid
-func place(term Tetro, grid [][]string, row, col int) {
+func place(term Tetromino, grid [][]string, row, col int) {
 	for r := range term.shape {
 		for c := range term.shape[r] {
 			if term.shape[r][c] == 1 {
