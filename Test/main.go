@@ -1,44 +1,182 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"math"
+	"os"
+	"strings"
 )
 
-// defining tetro structure
-type Tetro struct {
+type Tetromino struct {
 	shape [][]int
 	name  string
 }
 
-var (
-	A = Tetro{[][]int{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {1, 1, 1, 1}}, "A"}
-	B = Tetro{[][]int{{0, 0, 0, 0}, {0, 0, 0, 1}, {0, 1, 1, 1}, {0, 0, 0, 0}}, "B"}
-	C = Tetro{[][]int{{1, 1, 0, 0}, {0, 1, 0, 0}, {0, 1, 0, 0}, {0, 0, 0, 0}}, "C"}
-	D = Tetro{[][]int{{0, 0, 0, 0}, {0, 1, 1, 0}, {0, 1, 1, 0}, {0, 0, 0, 0}}, "D"}
-	E = Tetro{[][]int{{0, 0, 0, 0}, {0, 1, 1, 0}, {1, 1, 0, 0}, {0, 0, 0, 0}}, "E"}
-	F = Tetro{[][]int{{0, 0, 0, 0}, {0, 0, 1, 0}, {0, 1, 1, 1}, {0, 0, 0, 0}}, "F"}
-	G = Tetro{[][]int{{0, 0, 0, 0}, {1, 1, 0, 0}, {0, 1, 1, 0}, {0, 0, 0, 0}}, "G"}
-)
+func byteToInt(b byte) (int, error) {
+	if b == '.' {
+		return 0, nil
+	} else if b == '#' {
+		return 1, nil
+	} else {
+		return 0, errors.New("error in sample file")
+	}
+}
+
+// func isValidTetro(tetro [][]int) bool {
+// 	for row := range tetro{
+// 		for col := range tetro[row]{
+// 			if tetro[row][col] == 1 && tetro
+// 		}
+// 	}
+// }
+
+func stringToIntSlice(s string) ([]int, error) {
+	res := []int{}
+	if len(s) != 4 {
+		return nil, errors.New("invalid length entry in file")
+	}
+	for _, b := range s {
+		num, err := byteToInt(byte(b))
+		if err != nil {
+			return nil, err
+		}
+		res = append(res, num)
+	}
+	return res, nil
+}
+
+func allOne(num1, num2 int) bool {
+	if num1 == 1 {
+		return num1 == num2
+	}
+	return false
+}
+
+func sliceIsEmpty(num []int) bool {
+	var count int
+	for i := range num {
+		if num[i] == 0 {
+			count++
+		}
+	}
+	if count == 4 {
+		return true
+	} else {
+		return false
+	}
+}
+
+func isSurroundedByOnes(arr [][]int, row, col int) bool {
+	// Check horizontally
+	if col-1 >= 0 && allOne(arr[row][col-1], arr[row][col]) || col+1 < len(arr[row]) && allOne(arr[row][col+1], arr[row][col]) {
+		return true
+	}
+	// Check vertically
+	if row-1 >= 0 && allOne(arr[row][col], arr[row-1][col]) || row+1 < len(arr) && allOne(arr[row][col], arr[row+1][col]) {
+		return true
+	}
+	return false
+}
+
+func isValidTetro(tetro [][]int) (bool, error) {
+	var bordercount int
+	var linecount int
+
+	for row := 0; row < len(tetro); row++ {
+		for col := 0; col < len(tetro[row]); col++ {
+			if tetro[row][col] == 1 {
+				linecount++
+			}
+			if tetro[row][col] == 1 && isSurroundedByOnes(tetro, row, col) {
+				bordercount++
+				// fmt.Printf("Element at (%d, %d) is surrounded by ones\n", row, col)
+			}
+		}
+	}
+	if bordercount > 4 || linecount > 4 {
+		return false, errors.New("Invalid Tetromino")
+	} else {
+		return true, nil
+	}
+}
+
+func tetroGroupFunc(textFile string) ([]Tetromino, int) {
+	tetrominoesGroup := []Tetromino{}
+	// opens text file
+	sampleFile, err := os.ReadFile(textFile)
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, 0
+	}
+	var nums [][]int
+	for i, ch := range strings.Split(string(sampleFile), "\n") {
+		if ch == "" {
+			continue
+		}
+		chArr, err := stringToIntSlice(ch)
+		if err != nil {
+			fmt.Println(err.Error(), "at line", i+1)
+			return nil, 0
+		} else {
+			nums = append(nums, chArr)
+		}
+	}
+
+	startAscii := 'A'
+	tetrominoes := make(map[rune][][]int)
+
+	for i := 0; i < len(nums); {
+		characterMino := [][]int{}
+		for j := i; j < i+4; j++ {
+			if sliceIsEmpty(nums[j]) {
+				continue
+			}
+			characterMino = append(characterMino, nums[j])
+		}
+		tetrominoes[startAscii] = characterMino
+		startAscii++
+		i += 4
+	}
+
+	for k := range tetrominoes {
+		res, err := isValidTetro(tetrominoes[k])
+		if err != nil {
+			fmt.Println(err.Error())
+			return nil, 0
+		} else if res {
+			newTetro := Tetromino{shape: tetrominoes[k], name: string(k)}
+			tetrominoesGroup = append(tetrominoesGroup, newTetro)
+		}
+	}
+
+	gridSize := math.Sqrt(float64(len(tetrominoesGroup) * 4 ))
+
+	return tetrominoesGroup, int(math.Ceil(gridSize))
+
+	// for k,_ := range tetrominoes{
+	// 	newTetro := Tetromino{shape: tetrominoes[k], name: string(k)}
+	// 	tetrominoesGroup = append(tetrominoesGroup, newTetro)
+	// }
+}
 
 var (
-	tetroGroup = []Tetro{A, B, C, D, E, F, G}
-	gridSize   = math.Sqrt(float64(len(tetroGroup) * len(tetroGroup[0].shape)))
-	grid       = make([][]string, int(math.Ceil(gridSize)))
+	tetroGroup, gridSize = tetroGroupFunc("sample.txt")
+	grid                 = make([][]string, gridSize)
 )
 
 // initializes a square grid 2D
 func initGrid() {
-	for i := 0; i < int(math.Ceil(gridSize)); i++ {
-		grid[i] = make([]string, int(math.Ceil(gridSize)))
-		for j := 0; j < int(math.Ceil(gridSize)); j++ {
+	for i := 0; i < gridSize; i++ {
+		grid[i] = make([]string, gridSize)
+		for j := 0; j < gridSize; j++ {
 			grid[i][j] = "*"
 		}
 	}
 }
 
 // checks whether we can place the term at the specific row and col of grid
-func canPlace(term Tetro, grid [][]string, row, col int) bool {
+func canPlace(term Tetromino, grid [][]string, row, col int) bool {
 	for r := range term.shape {
 		for c := range term.shape[r] {
 			if term.shape[r][c] == 1 {
