@@ -211,7 +211,7 @@ func remove(term Tetromino, grid [][]string, row, col int) {
 }
 
 // fuction that uses recursive backtracking to place tetro in grig
-func completeGrid(tetro_group []Tetro, grid [][]string, index int) bool {
+func completeGrid(tetro_group []Tetromino, grid [][]string, index int) bool {
 	if index == len(tetro_group) {
 		return true
 	}
